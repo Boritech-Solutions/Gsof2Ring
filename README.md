@@ -24,4 +24,4 @@ If you have any comment or question contact us at:
 
 #### Acknowledgement:
 
-This work was funded thanks to the [Puerto Rico Seismic Network](http://prsn.uprm.edu)
+The development and maintenance of Gsof2Ring is funded entirely by software and research contracts with Boritech Solutions.
