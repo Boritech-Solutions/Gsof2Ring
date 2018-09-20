@@ -3,8 +3,9 @@ import socket
 import math
 import argparse
 import json
+import functools
 
-## GSOF CLASS (Can just be imported I think)
+## GSOF CLASS 
 __author__ = "Henry T. Berglund"
 class Gsof(object):
     """ Class to connect to tcp port and parse GSOF messages """
