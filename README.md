@@ -6,7 +6,8 @@ A python module that uses PyEarthworm Library to inject RTX GSOF Messages into a
 This module already assumes [Earthworm](http://earthwormcentral.org), [Anaconda Python](https://www.anaconda.com/download/#linux), and [PyEarthworm](https://github.com/Boritech-Solutions/GSOF2RING) are already installed and configured and with the same bit-size (32 or 64 bits). 
 
 1. Download or clone the repository in an place accessible to executables for the user that runs earthworm.
-2. In startstop_*.d add the command 'Gsof2Ring.sh' with the following parameters:
+2. Move the compiled PyEW shared library into the gsof2ring folder.
+3. In startstop_*.d add the command 'Gsof2Ring.sh' with the following parameters:
     1. -m: Module ID
     2. -r: Ring ID
     3. -p: Port of GPS Reciever
