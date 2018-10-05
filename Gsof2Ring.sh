@@ -75,6 +75,8 @@ def main():
     # Add output to Module as Output 0
     Mod.add_ring(int(Config.get('Earthworm','RING_ID')))
     
+    connection_check = 0 
+    
     while 1:
         
         ## Check if EW module is ok
@@ -85,7 +87,10 @@ def main():
         try:
             GPSRecv.get_message_header()
             GPSRecv.get_records()
-
+            
+            # We got data
+            connection_check = 0
+            
             # PRINT GSOF STREAM; Open pos file
             #outfile = open ('positionlog_xyz', 'a')
             #print "X = %12.3f  Y = %12.3f  Z = %12.3f" % (GPSRecv.rec_dict['X_POS'], GPSRecv.rec_dict['Y_POS'], GPSRecv.rec_dict['Z_POS'])
@@ -153,8 +158,12 @@ def main():
         
         # We are not getting good data
         except (struct.error, TypeError):
+            if ( connection_check > 4 ) :
+                print ("We have tried 5 times, shutting down so EW restarts me")
+                Mod.goodbye()
             print("We cannot connect to the GPS, trying again in 1 minute.")
             time.sleep(60)
+            connection_check = connection_check + 1
         
     
     print("gsof2ring has terminated")
