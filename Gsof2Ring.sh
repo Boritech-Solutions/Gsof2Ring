@@ -62,12 +62,17 @@ def main():
                         
     Station = Config.get('Station','NAME')
     Network = Config.get('Station','NETWORK')
+    print("Connecting to " + Station + " in " + Network + " at " + Config.get('Station','IP') + ":" + Config.get('Station','PORT'))
     
     GPS_LEAP_SECONDS = int(Config.get('GPS','LEAP_SECONDS'))
     
-    STAT_X = Config.get('GPS','X')
-    STAT_Y = Config.get('GPS','Y')
-    STAT_Z = Config.get('GPS','Z')
+    STAT_X = float(Config.get('GPS','X'))
+    STAT_Y = float(Config.get('GPS','Y'))
+    STAT_Z = float(Config.get('GPS','Z'))
+    
+    NAME_X = float(Config.get('GPS','CHX'))
+    NAME_Y = float(Config.get('GPS','CHY'))
+    NAME_Z = float(Config.get('GPS','CHZ'))
     
     # Remember dtype must be int32
     dt = np.dtype(np.int32)
@@ -87,84 +92,84 @@ def main():
         try:
             GPSRecv.get_message_header()
             GPSRecv.get_records()
-            
             # We got data
             connection_check = 0
-            
-            # PRINT GSOF STREAM; Open pos file
-            #outfile = open ('positionlog_xyz', 'a')
-            #print "X = %12.3f  Y = %12.3f  Z = %12.3f" % (GPSRecv.rec_dict['X_POS'], GPSRecv.rec_dict['Y_POS'], GPSRecv.rec_dict['Z_POS'])
-            
-            ## Format time
-            gpsweek=(GPSRecv.rec_dict['GPS_WEEK'])
-            tiempo=(GPSRecv.rec_dict['GPS_TIME'])/1000
-            gpstime=gpsweek*secsInWeek + tiempo + GPS_LEAP_SECONDS
-            unxtime=int(gpstime) + UNIX2GPS - GPS_LEAP_SECONDS
-            fecha=(time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(unxtime)))
-            #print "%i %i %i %i " % (gpsweek, tiempo, gpstime, unxtime)
-            #print "%i LAT = %12.8f  LON = %12.8f  HT = %12.8f" % (unxtime, GPSRecv.rec_dict['LATITUDE'], GPSRecv.rec_dict['LONGITUDE'], GPSRecv.rec_dict['HEIGHT'])
-            
-            # Close pos file
-            #outfile.write ( "%s %12.8f  %12.8f  %12.8f\n" % (fecha, GPSRecv.rec_dict['X_POS']-PRSN_X, GPSRecv.rec_dict['Y_POS']-PRSN_Y, GPSRecv.rec_dict['Z_POS']-PRSN_Z))
-            #outfile.close()
-            
-            # Create EW Wave to send
-            xdat = (GPSRecv.rec_dict['X_POS']-STAT_X)*1000
-            X = {
-              'station': Station,
-              'network': Network,
-              'channel': 'GPX',
-              'location': '--',
-              'nsamp': 1,
-              'samprate': 1,
-              'startt': unxtime,
-              #'endt': unixtime+1,
-              'datatype': 'i4',
-              'data': np.array([xdat], dtype=dt)
-            }
-            
-            ydat = (GPSRecv.rec_dict['Y_POS']-STAT_Y)*1000
-            Y = {
-              'station': Station,
-              'network': Network,
-              'channel': 'GPY',
-              'location': '--',
-              'nsamp': 1,
-              'samprate': 1,
-              'startt': unxtime,
-              #'endt': unxtime + 1,
-              'datatype': 'i4',
-              'data': np.array([ydat], dtype=dt)
-            }
-            
-            zdat = (GPSRecv.rec_dict['Z_POS']-STAT_Z)*1000
-            Z = {
-              'station': Station,
-              'network': Network,
-              'channel': 'GPZ',
-              'location': '--',
-              'nsamp': 1,
-              'samprate': 1,
-              'startt': unxtime,
-              #'endt': unxtime + 1,
-              'datatype': 'i4',
-              'data': np.array([zdat], dtype=dt)
-            }
-            
-            # Send to EW
-            Mod.put_wave(0, X)
-            Mod.put_wave(0, Y)
-            Mod.put_wave(0, Z)
         
         # We are not getting good data
         except (struct.error, TypeError):
             if ( connection_check > 4 ) :
                 print ("We have tried 5 times, shutting down so EW restarts me")
                 Mod.goodbye()
-            print("We cannot connect to the GPS, trying again in 1 minute.")
-            time.sleep(60)
+                break
+            print("We cannot connect to the GPS, trying again in 10 sec...")
+            time.sleep(10)
             connection_check = connection_check + 1
+
         
+        # PRINT GSOF STREAM; Open pos file
+        #outfile = open ('positionlog_xyz', 'a')
+        #print "X = %12.3f  Y = %12.3f  Z = %12.3f" % (GPSRecv.rec_dict['X_POS'], GPSRecv.rec_dict['Y_POS'], GPSRecv.rec_dict['Z_POS'])
+        
+        ## Format time
+        gpsweek=(GPSRecv.rec_dict['GPS_WEEK'])
+        tiempo=(GPSRecv.rec_dict['GPS_TIME'])/1000
+        gpstime=gpsweek*secsInWeek + tiempo + GPS_LEAP_SECONDS
+        unxtime=int(gpstime) + UNIX2GPS - GPS_LEAP_SECONDS
+        fecha=(time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(unxtime)))
+        #print "%i %i %i %i " % (gpsweek, tiempo, gpstime, unxtime)
+        #print "%i LAT = %12.8f  LON = %12.8f  HT = %12.8f" % (unxtime, GPSRecv.rec_dict['LATITUDE'], GPSRecv.rec_dict['LONGITUDE'], GPSRecv.rec_dict['HEIGHT'])
+        
+        # Close pos file
+        #outfile.write ( "%s %12.8f  %12.8f  %12.8f\n" % (fecha, GPSRecv.rec_dict['X_POS']-PRSN_X, GPSRecv.rec_dict['Y_POS']-PRSN_Y, GPSRecv.rec_dict['Z_POS']-PRSN_Z))
+        #outfile.close()
+        
+        # Create EW Wave to send
+        xdat = (GPSRecv.rec_dict['X_POS']-STAT_X)*1000
+        X = {
+          'station': Station,
+          'network': Network,
+          'channel': NAME_X,
+          'location': '--',
+          'nsamp': 1,
+          'samprate': 1,
+          'startt': unxtime,
+          #'endt': unixtime+1,
+          'datatype': 'i4',
+          'data': np.array([xdat], dtype=dt)
+        }
+        
+        ydat = (GPSRecv.rec_dict['Y_POS']-STAT_Y)*1000
+        Y = {
+          'station': Station,
+          'network': Network,
+          'channel': NAME_Y,
+          'location': '--',
+          'nsamp': 1,
+          'samprate': 1,
+          'startt': unxtime,
+          #'endt': unxtime + 1,
+          'datatype': 'i4',
+          'data': np.array([ydat], dtype=dt)
+        }
+        
+        zdat = (GPSRecv.rec_dict['Z_POS']-STAT_Z)*1000
+        Z = {
+          'station': Station,
+          'network': Network,
+          'channel': NAME_Z,
+          'location': '--',
+          'nsamp': 1,
+          'samprate': 1,
+          'startt': unxtime,
+          #'endt': unxtime + 1,
+          'datatype': 'i4',
+          'data': np.array([zdat], dtype=dt)
+        }
+        
+        # Send to EW
+        Mod.put_wave(0, X)
+        Mod.put_wave(0, Y)
+        Mod.put_wave(0, Z)
     
     print("gsof2ring has terminated")
 
