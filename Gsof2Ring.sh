@@ -88,9 +88,9 @@ def main():
     STAT_Y = float(Config.get('GPS','Y'))
     STAT_Z = float(Config.get('GPS','Z'))
     
-    NAME_X = float(Config.get('GPS','CHX'))
-    NAME_Y = float(Config.get('GPS','CHY'))
-    NAME_Z = float(Config.get('GPS','CHZ'))
+    NAME_X = str(Config.get('GPS','CHX'))
+    NAME_Y = str(Config.get('GPS','CHY'))
+    NAME_Z = str(Config.get('GPS','CHZ'))
     
     # Remember dtype must be int32
     dt = np.dtype(np.int32)
