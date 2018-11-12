@@ -1,12 +1,17 @@
-# GSOF2RING
+# Gsof2Ring
 A python module that uses PyEarthworm Library to inject RTX GSOF Messages into an Earthworm Ring
 
 ## Installation & Configuration
 
-This module already assumes [Earthworm](http://earthwormcentral.org), [Anaconda Python](https://www.anaconda.com/download/#linux), and [PyEarthworm](https://github.com/Boritech-Solutions/GSOF2RING) are already installed and configured and with the same bit-size (32 or 64 bits). 
+This module already assumes [Earthworm](http://earthwormcentral.org), [Anaconda Python](https://www.anaconda.com/download/#linux), and [PyEarthworm](https://github.com/Boritech-Solutions/Gsof2Ring) are already installed and configured and with the same bit-size (32 or 64 bits). A copy of it is included in the git repo as as submodule run: 
+
+    git submodule init
+    git submodule update
+    
+to fetch relevant files. To install and run:
 
 1. Download or clone the repository in an place accessible to executables for the user that runs earthworm.
-2. Move the compiled PyEW shared library into the gsof2ring folder.
+2. Move the compiled PyEW shared library into the Gsof2Ring folder.
 3. In startstop_*.d add the command 'Gsof2Ring.sh' with the following parameters:
     1. -p: Configuration file
     
@@ -15,9 +20,9 @@ The resulting commandline command should look like this:
     Gsof2Ring.sh -p <Path to config file>
 
 
-### GSOF2RING.d configuration file
+### Gsof2Ring.d configuration file
 
-Unlike normal Earthworm modules, GSOF2Ring has a simpler type of configuration file. 
+Unlike normal Earthworm modules, Gsof2Ring has a simpler type of configuration file. 
 It has three major sections:
 
 1. Earthworm: Contains EW Related INFO
@@ -38,7 +43,7 @@ It has three major sections:
      6. CHZ: The channel name for the Z position
      7. LEAP_SECONDS: The current number of GPS Leap Seconds
 
-The following is an example of a configuration file (usually named gsof2ring.d): 
+The following is an example of a configuration file (usually named Gsof2Ring.d): 
 
     [Earthworm]
     RING_ID: 1000
@@ -61,7 +66,7 @@ The following is an example of a configuration file (usually named gsof2ring.d):
     CHZ: GPZ
     LEAP_SECONDS: 18
 
-### GSOF2Ring.desc descriptor file
+### Gsof2Ring.desc descriptor file
 The descriptor files follows the normal Earthworm descriptor files structure and must include:
 
     modName  gsof2ew
