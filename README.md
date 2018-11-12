@@ -43,7 +43,7 @@ It has three major sections:
      6. CHZ: The channel name for the Z position
      7. LEAP_SECONDS: The current number of GPS Leap Seconds
 
-The following is an example of a configuration file (usually named Gsof2Ring.d): 
+The following is an example of a configuration file (usually named gsof2ring.d): 
 
     [Earthworm]
     RING_ID: 1000
