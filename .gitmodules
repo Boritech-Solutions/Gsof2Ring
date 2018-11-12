@@ -1,0 +1,3 @@
+[submodule "PyEarthWorm"]
+	path = PyEarthWorm
+	url = https://github.com/Boritech-Solutions/PyEarthWorm
