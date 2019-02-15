@@ -131,7 +131,8 @@ def main():
         ## Format time
         gpsweek=(GPSRecv.rec_dict['GPS_WEEK'])
         tiempo=(GPSRecv.rec_dict['GPS_TIME'])/1000
-        gpstime=gpsweek*secsInWeek + tiempo + GPS_LEAP_SECONDS
+#        gpstime=gpsweek*secsInWeek + tiempo + GPS_LEAP_SECONDS
+        gpstime=gpsweek*secsInWeek + tiempo
         unxtime=int(gpstime) + UNIX2GPS - GPS_LEAP_SECONDS
         fecha=(time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(unxtime)))
         #print "%i %i %i %i " % (gpsweek, tiempo, gpstime, unxtime)
