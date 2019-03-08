@@ -34,7 +34,7 @@ class Gsof(object):
             (checksum, etx) = unpack('>2B', self.sock.recv(2))
         except:
             raise RuntimeError
-            continue
+            pass
 
         def checksum256(st):
           """Calculate checksum"""
