@@ -112,7 +112,7 @@ class Gsof(object):
                                'VCV_YY', 'VCV_YZ', 'VCV_ZZ', 'UNIT_VAR_VCV', 'NUM_EPOCHS_VCV')
             rec_values = unpack('>8fh', self.msg_bytes[0:record_length])
             self.rec_dict.update(dict(zip(rec_field_names, rec_values)))
-           self.msg_bytes = self.msg_bytes[record_length:]
+            self.msg_bytes = self.msg_bytes[record_length:]
         elif record_type == 12:
             rec_field_names = ('POSITION_RMS_SIG', 'SIG_EAST', 'SIG_NORT', 'COVAR_EN', 'SIG_UP',
                                'SEMI_MAJOR', 'SEMI_MINOR', 'ORIENTATION', 'UNIT_VAR_SIG',
