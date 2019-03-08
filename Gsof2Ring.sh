@@ -190,6 +190,8 @@ def main():
         Mod.put_wave(0, Y)
         Mod.put_wave(0, Z)
     
+    # Disconnect Gsof
+    GPSRecv.disconnect()
     print("gsof2ring has terminated")
 
 if __name__ == '__main__':

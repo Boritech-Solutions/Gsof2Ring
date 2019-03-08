@@ -23,6 +23,9 @@ class Gsof(object):
 
     def connect(self, host, port):
         self.sock.connect((host, port))
+    
+    def disconnect(self):
+        self.sock.close()
 
     def get_message_header(self):
         data = self.sock.recv(7)
