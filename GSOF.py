@@ -29,8 +29,12 @@ class Gsof(object):
         msg_field_names = ('STX', 'STATUS', 'TYPE', 'LENGTH',
                            'T_NUM', 'PAGE_INDEX', 'MAX_PAGE_INDEX')
         self.msg_dict = dict(zip(msg_field_names, unpack('>7B', data)))
-        self.msg_bytes = self.sock.recv(self.msg_dict['LENGTH'] - 3)
-        (checksum, etx) = unpack('>2B', self.sock.recv(2))
+        try:
+            self.msg_bytes = self.sock.recv(self.msg_dict['LENGTH'] - 3)
+            (checksum, etx) = unpack('>2B', self.sock.recv(2))
+        except:
+            raise RuntimeError
+            continue
 
         def checksum256(st):
           """Calculate checksum"""
@@ -103,12 +107,12 @@ class Gsof(object):
             rec_values = unpack('>B2d', self.msg_bytes[0:record_length])
             self.rec_dict.update(dict(zip(rec_field_names, rec_values)))
             self.msg_bytes = self.msg_bytes[record_length:]
-#        elif record_type == 11:
-#            rec_field_names = ('POSITION_RMS_VCV', 'VCV_XX', 'VCV_XY', 'VCV_XZ',
-#                               'VCV_YY', 'VCV_YZ', 'VCV_ZZ', 'UNIT_VAR_VCV', 'NUM_EPOCHS_VCV')
-#            rec_values = unpack('>8fh', self.msg_bytes[0:record_length])
-#            self.rec_dict.update(dict(zip(rec_field_names, rec_values)))
-#            self.msg_bytes = self.msg_bytes[record_length:]
+        elif record_type == 11:
+            rec_field_names = ('POSITION_RMS_VCV', 'VCV_XX', 'VCV_XY', 'VCV_XZ',
+                               'VCV_YY', 'VCV_YZ', 'VCV_ZZ', 'UNIT_VAR_VCV', 'NUM_EPOCHS_VCV')
+            rec_values = unpack('>8fh', self.msg_bytes[0:record_length])
+            self.rec_dict.update(dict(zip(rec_field_names, rec_values)))
+           self.msg_bytes = self.msg_bytes[record_length:]
         elif record_type == 12:
             rec_field_names = ('POSITION_RMS_SIG', 'SIG_EAST', 'SIG_NORT', 'COVAR_EN', 'SIG_UP',
                                'SEMI_MAJOR', 'SEMI_MINOR', 'ORIENTATION', 'UNIT_VAR_SIG',

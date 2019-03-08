@@ -40,7 +40,7 @@ from GSOF import Gsof
 
 secsInWeek = 604800
 secsInDay = 86400
-UNIX2GPS         = 315964800  # seconds from UNIX to GPS epoch
+UNIX2GPS         = 315964800   # seconds from UNIX to GPS epoch
 #GPS_LEAP_SECONDS = 18         # leap seconds since GPS epoch (as of 4/18/2017)
 # A note about the number above:  A constant offset between unix time and gps time exist=19, 
 # but up to the date above there are 37 leap seconds, therefore, the difference is the number assigned above
@@ -112,17 +112,17 @@ def main():
             GPSRecv.get_records()
             # We got data
             connection_check = 0
-        
-        # We are not getting good data
-        except (struct.error, TypeError):
+            
+        # We caught an RuntimeError Exception
+        except RuntimeError:
             if ( connection_check > 4 ) :
                 print ("We have tried 5 times, shutting down so EW restarts me")
-                Mod.goodbye()
+                Mod.goodbye() # Shutsdown Module heartbeats stop EW restarts me
                 break
             print("We cannot connect to the GPS, trying again in 10 sec...")
             time.sleep(10)
             connection_check = connection_check + 1
-
+            continue
         
         # PRINT GSOF STREAM; Open pos file
         #outfile = open ('positionlog_xyz', 'a')
