@@ -36,6 +36,7 @@ class Gsof(object):
             self.msg_bytes = self.sock.recv(self.msg_dict['LENGTH'] - 3)
             (checksum, etx) = unpack('>2B', self.sock.recv(2))
         except:
+            print("There has been an incomplete record but I will raise an error")
             raise RuntimeError
             pass
 
@@ -55,6 +56,7 @@ class Gsof(object):
             try:
                 self.select_record(record_type, record_length)
             except struct.error:
+                print("There has been an incomplete record but I will proceed")
                 continue
 
     def select_record(self, record_type, record_length):
