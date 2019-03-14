@@ -52,7 +52,10 @@ class Gsof(object):
             # READ THE FIRST TWO BYTES FROM RECORD HEADER
             record_type, record_length = unpack('>2B', self.msg_bytes[0:2])
             self.msg_bytes = self.msg_bytes[2:]
-            self.select_record(record_type, record_length)
+            try:
+                self.select_record(record_type, record_length)
+            except struct.error:
+                continue
 
     def select_record(self, record_type, record_length):
         if record_type == 1:
