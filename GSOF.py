@@ -55,7 +55,7 @@ class Gsof(object):
             self.msg_bytes = self.msg_bytes[2:]
             try:
                 self.select_record(record_type, record_length)
-            except struct.error:
+            except:
                 print("There has been an incomplete record but I will proceed")
                 continue
 
