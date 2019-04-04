@@ -50,10 +50,10 @@ class Gsof(object):
 
     def get_records(self):
         while len(self.msg_bytes) > 0:
-            # READ THE FIRST TWO BYTES FROM RECORD HEADER
-            record_type, record_length = unpack('>2B', self.msg_bytes[0:2])
-            self.msg_bytes = self.msg_bytes[2:]
             try:
+                # READ THE FIRST TWO BYTES FROM RECORD HEADER
+                record_type, record_length = unpack('>2B', self.msg_bytes[0:2])
+                self.msg_bytes = self.msg_bytes[2:]
                 self.select_record(record_type, record_length)
             except:
                 print("There has been an incomplete record but I will proceed")
