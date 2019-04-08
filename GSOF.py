@@ -56,8 +56,7 @@ class Gsof(object):
                 self.msg_bytes = self.msg_bytes[2:]
                 self.select_record(record_type, record_length)
             except:
-                print("There has been an incomplete record but I will proceed")
-                continue
+                print("There has been an incomplete record but I will restart")
 
     def select_record(self, record_type, record_length):
         if record_type == 1:

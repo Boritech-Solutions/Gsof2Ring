@@ -123,6 +123,10 @@ def main():
             time.sleep(10)
             connection_check = connection_check + 1
             continue
+        except:
+            print ("Fail: EW restarts me")
+            Mod.goodbye()
+            continue
         
         # PRINT GSOF STREAM; Open pos file
         #outfile = open ('positionlog_xyz', 'a')
