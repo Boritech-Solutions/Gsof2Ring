@@ -57,6 +57,7 @@ class Gsof(object):
                 self.select_record(record_type, record_length)
             except:
                 print("There has been an incomplete record but I will restart")
+                break
 
     def select_record(self, record_type, record_length):
         if record_type == 1:
