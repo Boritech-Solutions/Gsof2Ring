@@ -17,31 +17,22 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from struct import unpack
-import struct
-import PyEW
-import socket
-import math
-import argparse
-import json
-import http.client
-import urllib
-import sys
-import numpy as np
+
+import struct, PyEW, socket, math, argparse, json, http.client, urllib, sys
 from math import radians, sqrt, sin, cos
-import configparser
+import configparser, logging, os
+from struct import unpack
+import numpy as np
 
 # Mods by Alberto M. Lopez and Francisco Hernandez to deal with gps time to unix time
 # taken from code time2time.py from https://raw.githubusercontent.com/igors/time2time/master/time2time.py
-import optparse
-import time
-import datetime
+import optparse, time, datetime
 from GSOF import Gsof
 
 secsInWeek = 604800
-secsInDay = 86400
-UNIX2GPS         = 315964800   # seconds from UNIX to GPS epoch
-#GPS_LEAP_SECONDS = 18         # leap seconds since GPS epoch (as of 4/18/2017)
+secsInDay  = 86400
+UNIX2GPS   = 315964800   # seconds from UNIX to GPS epoch
+#GPS_LEAP_SECONDS = 18   # leap seconds since GPS epoch (as of 4/18/2017)
 # A note about the number above:  A constant offset between unix time and gps time exist=19, 
 # but up to the date above there are 37 leap seconds, therefore, the difference is the number assigned above
 # to the variable GPS_LEAP_SECONDS.
@@ -51,7 +42,6 @@ USE_UTC         = False
 #PRSN_X=2353900.1799
 #PRSN_Y=-5584618.6433
 #PRSN_Z=1981221.1234
-#
 
 def main():
     
@@ -68,6 +58,17 @@ def main():
     results = parser.parse_args()
     Config.read(results.ConfFile)
     
+    # Setup the module logfile
+    log_path = os.environ['EW_LOG']
+    log_name = results.ConfFile.split(".")[0] + ".log"
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh = TimedRotatingFileHandler(filename=log_path + log_name, when='midnight', interval=1, backupCount=3)
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(formatter)
+    logging.getLogger().addHandler(fh)
+    logging.getLogger().setLevel(logging.DEBUG)
+    logger=logging.getLogger('gsof2ew')
+    
     # OPEN GSOF STREAM
     GPSRecv = Gsof()
     
@@ -80,7 +81,7 @@ def main():
                         
     Station = Config.get('Station','NAME')
     Network = Config.get('Station','NETWORK')
-    print("Connecting to " + Station + " in " + Network + " at " + Config.get('Station','IP') + ":" + Config.get('Station','PORT'))
+    logger.info("Connecting to " + Station + " in " + Network + " at " + Config.get('Station','IP') + ":" + Config.get('Station','PORT'))
     
     GPS_LEAP_SECONDS = int(Config.get('GPS','LEAP_SECONDS'))
     
@@ -116,15 +117,15 @@ def main():
         # We caught an RuntimeError Exception
         except RuntimeError:
             if ( connection_check > 4 ) :
-                print ("We have tried 5 times, shutting down so EW restarts me")
+                logger.error("We have tried 5 times, shutting down so EW restarts me")
                 Mod.goodbye() # Shutsdown Module heartbeats stop EW restarts me
                 break
-            print("We cannot connect to the GPS, trying again in 10 sec...")
+            logger.warning("We cannot connect to the GPS, trying again in 10 sec...")
             time.sleep(10)
             connection_check = connection_check + 1
             continue
         except:
-            print ("Fail: EW restarts me")
+            logger.error("Fail: EW restarts me")
             Mod.goodbye()
             continue
         
@@ -196,7 +197,7 @@ def main():
     
     # Disconnect Gsof
     GPSRecv.disconnect()
-    print("gsof2ring has terminated")
+    logger.info("gsof2ring has terminated")
 
 if __name__ == '__main__':
     try:

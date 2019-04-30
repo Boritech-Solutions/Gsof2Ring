@@ -4,6 +4,9 @@ import math
 import argparse
 import json
 import functools
+import logging
+
+logger = logging.getLogger(__name__)
 
 ## GSOF CLASS 
 __author__ = "Henry T. Berglund"
@@ -36,7 +39,7 @@ class Gsof(object):
             self.msg_bytes = self.sock.recv(self.msg_dict['LENGTH'] - 3)
             (checksum, etx) = unpack('>2B', self.sock.recv(2))
         except:
-            print("There has been an incomplete record but I will raise an error")
+            logger.debug("There has been an incomplete record but I will raise an error")
             raise RuntimeError
             pass
 
@@ -56,7 +59,7 @@ class Gsof(object):
                 self.msg_bytes = self.msg_bytes[2:]
                 self.select_record(record_type, record_length)
             except:
-                print("There has been an incomplete record but I will restart")
+                logger.debug("There has been an incomplete record but I will restart")
                 break
 
     def select_record(self, record_type, record_length):
