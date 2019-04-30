@@ -19,6 +19,7 @@
 
 
 import struct, PyEW, socket, math, argparse, json, http.client, urllib, sys
+from logging.handlers import TimedRotatingFileHandler
 from math import radians, sqrt, sin, cos
 import configparser, logging, os
 from struct import unpack
