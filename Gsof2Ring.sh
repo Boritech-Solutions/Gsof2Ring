@@ -74,6 +74,7 @@ def main():
     GPSRecv = Gsof()
     Station = Config.get('Station','NAME')
     Network = Config.get('Station','NETWORK')
+    logger.info("Module Gsof2Ring, ModId: %i for Station %s has started", int(Config.get('Earthworm','MOD_ID')), Station)
     
     # Connect to GSOF    
     logger.info("Connecting to " + Station + " in " + Network + " at " + Config.get('Station','IP') + ":" + Config.get('Station','PORT'))
