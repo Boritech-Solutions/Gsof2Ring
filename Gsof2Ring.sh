@@ -79,6 +79,7 @@ def main():
     # Connect to EW
     Mod = PyEW.EWModule(int(Config.get('Earthworm','RING_ID')), int(Config.get('Earthworm','MOD_ID')), \
                         int(Config.get('Earthworm','INST_ID')), int(Config.get('Earthworm','HB')), False)
+    logger.info("PyEarthworm Module has finished loading")
                         
     Station = Config.get('Station','NAME')
     Network = Config.get('Station','NETWORK')
