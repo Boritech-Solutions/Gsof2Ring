@@ -1,6 +1,6 @@
 
 #
-#            Descriptor File for the export_generic module
+#            Descriptor File for Gsof2Ring
 #
 #    This file specifies when error messages are to be reported via
 #    email and pager.  All errors are logged in statmgr's daily log
@@ -23,7 +23,7 @@
 #    earthworm.h.
 #
 #
-modName  module_gsof2ring 
+modName  Gsof2ring 
 modId    MOD_GSOFPRSN
 instId   ${EW_INST_ID}
 #
@@ -65,13 +65,4 @@ restartMe
 #    Enclose string in double-quotes if it contains embedded 
 #    blanks. Each module may also issue a text string for an 
 #    error, overriding the default message shown here.
-#
-err: 0  nerr: 1  tsec: 0  page: 5  mail: 20
-text: "Missed msg(s) in shared memory."
-#
-err: 1  nerr: 1  tsec: 0  page: 0  mail: 5
-text: "Retreived msg too long for internal buffer."
-#
-err: 2  nerr: 1  tsec: 0  page: 0  mail: 5
-text: "transport.h tracking limit exceeded."
 #
