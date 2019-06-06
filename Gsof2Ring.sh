@@ -120,6 +120,7 @@ def main():
         except RuntimeError:
             if ( connection_check > 4 ) :
                 logger.error("We have tried 5 times, shutting down so EW restarts me")
+                GPSRecv.disconnect()
                 Mod.goodbye() # Shutsdown Module heartbeats stop EW restarts me
                 break
             logger.warning("We cannot connect to the GPS, trying again in 10 sec...")
@@ -128,6 +129,7 @@ def main():
             continue
         except:
             logger.error("Fail: EW restarts me")
+            GPSRecv.disconnect()
             Mod.goodbye()
             continue
         
@@ -199,6 +201,7 @@ def main():
     
     # Disconnect Gsof
     GPSRecv.disconnect()
+    Mod.goodbye()
     logger.info("gsof2ring has terminated")
 
 if __name__ == '__main__':
@@ -206,6 +209,7 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         #outfile.close
+        GPSRecv.disconnect()
         Mod.goodbye()
         print("\nSTATUS: Stopping, you hit ctl+C. ")
         #traceback.print_exc()
